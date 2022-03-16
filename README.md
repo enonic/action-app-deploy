@@ -19,7 +19,7 @@ See [action.yml](action.yml)
 - password
 
 ## Optional arguments
-- app_jar: path to the app to be deployed. If not given, the action will deploy all apps under "./build/libs/"
+- app_jar: name of the app to be deployed. If it's not given, the action will deploy all apps under "./build/libs/"
 - client_cert: required only if you need to authenticate using mTLS
 - client_key: required only if  you need to authenticate using mTLS
 
@@ -34,7 +34,7 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       - id: deploy_app_to_XP
-        uses: enonic-cloud/app-deploy-action@v1.0
+        uses: enonic-cloud/app-deploy-action@<tag>
         with:
           url: 'https://<org-proj>.enonic.cloud:4443'
           username: 'deploy-user'

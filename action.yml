@@ -17,9 +17,8 @@ inputs:
     description: 'Client cert, required only for MTLS session'
     required: false
   app_jar:  
-    description: 'Path to the app to be deployed'
-    required: true
-    default: './build/libs/*.jar'
+    description: 'Name of the app to be deployed'
+    required: false
 
 runs:
   using: "composite"
