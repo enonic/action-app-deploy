@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
+
 set -e
+
 FILE="$(find . -wholename ${APP_JAR} | head -n 1)"
 
 if [ -z "$FILE" ]; then
@@ -11,15 +13,13 @@ fi
 
 PARAMS="-X POST -f -s -S -o - -u ${XP_USERNAME}:${XP_PASSWORD} -F file=@${FILE}"
 
-if [ "$CLIENT_KEY" != "" ] && [ "$CLIENT_CERT" != "" ]; then
+if [ "$CLIENT_KEY" != "" ] && [ "$CLIENT_CERT" != "" ]; then    #Add the MTLS client key and cert in the parameters list for the curl command.
     echo "Using mTLS"
     KEY=$(mktemp /tmp/key.XXXXXX)
     CERT=$(mktemp /tmp/crt.XXXXXX)
-    #echo -n "${CLIENT_KEY}" | base64 -d > ${KEY}
-    #echo -n "${CLIENT_CERT}" | base64 -d > ${CERT}
     echo -n "${CLIENT_KEY}" > ${KEY}
     echo -n "${CLIENT_CERT}" > ${CERT}
     PARAMS="${PARAMS} --key ${KEY} --cert ${CERT}"
 fi
-echo "The command to run is curl ${PARAMS} ${XP_URL}/app/install"
+
 curl ${PARAMS} ${XP_URL}/app/install
