@@ -9,7 +9,7 @@ else
     echo "Found app jar: ${FILE}"
 fi
 
-PARAMS="-X POST -f -s -S -o - -u ${XP_USER}:${XP_PASSWORD} -F file=@${FILE}"
+PARAMS="-X POST -f -s -S -o - -u ${XP_USERNAME}:${XP_PASSWORD} -F file=@${FILE}"
 
 if [ "$CLIENT_KEY" != "" ] && [ "$CLIENT_CERT" != "" ]; then
     echo "Using mTLS"
