@@ -22,8 +22,7 @@ Optional arguments
 - client_cert 
 - client_key
 
-`` Note: If you need to authenticate using mTLS, use the client_key and client_cert. 
-´´
+* Note: If you need to authenticate using mTLS, use the client_key and client_cert. *
 
 The url, username and app_jar parameters can be given as string inputs. But password, client_cert and client_key has to be stored in the repository's secret store. 
 
