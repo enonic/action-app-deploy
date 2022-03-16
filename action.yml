@@ -16,57 +16,67 @@ inputs:
   client_cert: 
     description: 'Client cert for MTLS session'
     required: false
-  app_src_path:  
+  app_jar:  
     description: 'Path of the app to be deployed'
     required: true
-  appname:  
-    description: 'Name of the app to be deployed'
-    required: true
+    default: './build/libs/*.jar'
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-    - name: To check if key is empty or not
-      id: check_key_exist
+    - name: Deploy
       env:
+        XP_URL: ${{ inputs.url }}
+        XP_USERNAME: ${{ inputs.username }}
+        XP_PASSWORD: ${{ inputs.password }}
         CLIENT_KEY: ${{ inputs.client_key }}
-      if: "${{ env.CLIENT_KEY != '' }}"
-      run: |
-        echo ${{ inputs.client_key }} | base64 -d > ./client.key
-        echo '::set-output name=CLIENT_KEY_EXIST::True'
-      shell: bash
-    - name: To check if cert is empty or not
-      id: check_cert_exist
-      env:
         CLIENT_CERT: ${{ inputs.client_cert }}
-      if: "${{ env.CLIENT_CERT != '' }}"
-      run: |
-        echo ${{ inputs.client_cert }} | base64 -d > ./client.cert
-        echo '::set-output name=CLIENT_CERT_EXIST::True'
+        APP_JAR: ${{ inputs.app_jar }}
       shell: bash
+      run: deploy.sh
+
+  # steps:
+  #   - uses: actions/checkout@v2
+  #   - name: To check if key is empty or not
+  #     id: check_key_exist
+  #     env:
+  #       CLIENT_KEY: ${{ inputs.client_key }}
+  #     if: "${{ env.CLIENT_KEY != '' }}"
+  #     run: |
+  #       echo ${{ inputs.client_key }} | base64 -d > ./client.key
+  #       echo '::set-output name=CLIENT_KEY_EXIST::True'
+  #     shell: bash
+  #   - name: To check if cert is empty or not
+  #     id: check_cert_exist
+  #     env:
+  #       CLIENT_CERT: ${{ inputs.client_cert }}
+  #     if: "${{ env.CLIENT_CERT != '' }}"
+  #     run: |
+  #       echo ${{ inputs.client_cert }} | base64 -d > ./client.cert
+  #       echo '::set-output name=CLIENT_CERT_EXIST::True'
+  #     shell: bash
     
     
-    - name: Deployment over MTLS
-      if: | 
-         contains(steps.check_cert_exist.outputs.CLIENT_CERT_EXIST, 'True') &&
-         contains(steps.check_key_exist.outputs.CLIENT_KEY_EXIST, 'True')
-      run: |
-         echo Cert/Key GIVEN
-         curl --key ./client.key --cert ./client.cert -X POST -f -s -S -o - -u ${{ inputs.username }}:${{ inputs.password }} -F file=@$(find ${{ inputs.app_src_path }} -name '${{ inputs.appname }}') ${{ inputs.url }}/app/install | xargs echo
-      shell: bash
+  #   - name: Deployment over MTLS
+  #     if: | 
+  #        contains(steps.check_cert_exist.outputs.CLIENT_CERT_EXIST, 'True') &&
+  #        contains(steps.check_key_exist.outputs.CLIENT_KEY_EXIST, 'True')
+  #     run: |
+  #        echo Cert/Key GIVEN
+  #        curl --key ./client.key --cert ./client.cert -X POST -f -s -S -o - -u ${{ inputs.username }}:${{ inputs.password }} -F file=@$(find ${{ inputs.app_src_path }} -name '${{ inputs.appname }}') ${{ inputs.url }}/app/install | xargs echo
+  #     shell: bash
       
-    - name: Deployment without MTLS
-      if: | 
-         !contains(steps.check_cert_exist.outputs.CLIENT_CERT_EXIST, 'True') 
-         || !contains(steps.check_key_exist.outputs.CLIENT_KEY_EXIST, 'True')
-      run: |
-         echo Cert/Key Missing
-         curl -X POST -f -s -S -o - -u ${{ inputs.username }}:${{ inputs.password }} -F file=@$(find ${{ inputs.app_src_path }} -name '${{ inputs.appname }}') ${{ inputs.url }}/app/install | xargs echo
-      shell: bash
+  #   - name: Deployment without MTLS
+  #     if: | 
+  #        !contains(steps.check_cert_exist.outputs.CLIENT_CERT_EXIST, 'True') 
+  #        || !contains(steps.check_key_exist.outputs.CLIENT_KEY_EXIST, 'True')
+  #     run: |
+  #        echo Cert/Key Missing
+  #        curl -X POST -f -s -S -o - -u ${{ inputs.username }}:${{ inputs.password }} -F file=@$(find ${{ inputs.app_src_path }} -name '${{ inputs.appname }}') ${{ inputs.url }}/app/install | xargs echo
+  #     shell: bash
       
 
-    - name: Check job status
-      if: ${{ success() }}
-      run: echo "The app is successfuly deployed "
-      shell: bash
+  #   - name: Check job status
+  #     if: ${{ success() }}
+  #     run: echo "The app is successfuly deployed "
+  #     shell: bash
