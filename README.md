@@ -19,12 +19,10 @@ Mandatory arguments
 
 Optional arguments
 - app_jar: path to the app to be deployed. If not given, the action will deploy all apps under "./build/libs/"
-- client_cert 
-- client_key
+- client_cert: required only if you need to authenticate using mTLS
+- client_key: required only if  you need to authenticate using mTLS
 
-Note: If you need to authenticate using mTLS, use the client_key and client_cert.
-
-The url, username and app_jar parameters can be given as string inputs. But password, client_cert and client_key has to be stored in the repository's secret store. 
+Note: The url, username and app_jar parameters can be given as string inputs. But password, client_cert and client_key has to be stored in a secret store. 
 
 Here is an example workflow
 ```yaml
@@ -39,7 +37,7 @@ jobs:
         with:
           url: 'https://<org-proj>.enonic.cloud:4443'
           username: 'deploy-user'
-          password: ${{ secrets.ENONIC_APP_DEPLOY_PASS }}
+          password: ${{ secrets.XP_PASS }}
  ```
 
 
