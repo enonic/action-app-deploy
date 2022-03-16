@@ -32,8 +32,10 @@ runs:
         CLIENT_KEY: ${{ inputs.client_key }}
         CLIENT_CERT: ${{ inputs.client_cert }}
         APP_JAR: ${{ inputs.app_jar }}
+      run: |
+        chmod +x "${GITHUB_WORKSPACE}/deploy.sh"
+        "${GITHUB_WORKSPACE}/deploy.sh" 
       shell: bash
-      run: deploy.sh
 
   # steps:
   #   - uses: actions/checkout@v2

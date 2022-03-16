@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
 set -e
-
 FILE="$(find . -wholename ${APP_JAR} | head -n 1)"
 
 if [ -z "$FILE" ]; then
