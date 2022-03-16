@@ -10,14 +10,15 @@ Composite action to deploy applications to an XP instance.
 
 # Usage
 
+In your workflow specify the required arguments to be used as an input to this deploy action and use the actinon to execute the deployment task. 
 See [action.yml](action.yml)
-Specify the required arguments in a workflow. That will be used as an input to the deploy action. 
-Mandatory arguments
+
+## Mandatory arguments
 - url
 - username
 - password
 
-Optional arguments
+## Optional arguments
 - app_jar: path to the app to be deployed. If not given, the action will deploy all apps under "./build/libs/"
 - client_cert: required only if you need to authenticate using mTLS
 - client_key: required only if  you need to authenticate using mTLS
