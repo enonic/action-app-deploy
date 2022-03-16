@@ -21,5 +21,5 @@ if [ "$CLIENT_KEY" != "" ] && [ "$CLIENT_CERT" != "" ]; then
     echo -n "${CLIENT_CERT}" > ${CERT}
     PARAMS="${PARAMS} --key ${KEY} --cert ${CERT}"
 fi
-echo Teh command to run is curl ${PARAMS} ${XP_URL}/app/install"
+echo "The command to run is curl ${PARAMS} ${XP_URL}/app/install"
 curl ${PARAMS} ${XP_URL}/app/install
