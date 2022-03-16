@@ -32,7 +32,9 @@ runs:
         CLIENT_KEY: ${{ inputs.client_key }}
         CLIENT_CERT: ${{ inputs.client_cert }}
         APP_JAR: ${{ inputs.app_jar }}
-      run: ${{ github.action_path }}/deploy.sh
+      run: |
+        chmod +x ${{ github.action_path }}/deploy.sh
+        bash ${{ github.action_path }}/deploy.sh
       shell: bash
 
   # steps:
