@@ -17,7 +17,7 @@ inputs:
     description: 'Client cert, required only for MTLS session'
     required: false
   app_jar:  
-    description: 'Name of the app to be deployed'
+    description: 'Path and name of the app to be deployed'
     required: false
 
 runs:
