@@ -13,20 +13,32 @@ if [ "$CLIENT_KEY" != "" ] && [ "$CLIENT_CERT" != "" ]; then    #Add the MTLS cl
     PARAMS="${PARAMS} --key ${KEY} --cert ${CERT}"
 fi
 
+
 if [ -z "$APP_JAR" ]; then
-	echo "No app name spsecified deploying every app under build/libs"
-	apps=$(find ./build/libs  -type f -name "*.jar")
-	for app in $apps; do
-		TEMP_PARAMS="${PARAMS} -F file=@${app}"	#To avoid appending each file as argument in $PARAMS, use temporary variable for each file. 
-		curl ${TEMP_PARAMS} ${XP_URL}/app/install
-	done
+	echo "No app name specified, looking for .jar file under build/libs"
+	app=$(find ./build/libs  -type f -name "*.jar")
+	if [ -z "$app" ];
+	then
+		echo "There is no jar file, under build/libs"
+	else #If it has found one or more .jar files under build/libs
+		num_files=$(echo "$app" | wc -w)
+        	if (( $num_files > 1 ));
+        	then
+                	echo "More than one jar file under build/libs, please specify which one to deploy in action input." 
+        	else
+			PARAMS="${PARAMS} -F file=@${app}"
+			echo "Deploying:  $app"
+			curl ${PARAMS} ${XP_URL}/app/install
+	        fi
+	fi
+	
 else
 	echo "App name and path specified"
-	FILE="$(find . -wholename ./build/apps/${APP_JAR} | head -n 1)"
-	if [ "$FILE" != "" ]; then
-		PARAMS="${PARAMS} -F file=@${FILE}"
+	app="$(find . -wholename ${APP_JAR} | head -n 1)"
+	if [ "$app" != "" ]; then
+		PARAMS="${PARAMS} -F file=@${app}"
 		curl ${PARAMS} ${XP_URL}/app/install
 	else
-		echo "The specified app does not exist"
+		echo "Unable to find the specified app/PATH."
 	fi
 fi
