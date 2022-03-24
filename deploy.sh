@@ -21,7 +21,7 @@ PARAMS="-X POST -f -s -S -o - -u ${XP_USERNAME}:${XP_PASSWORD}" # Initializing a
 #fi
 
 
-echo "APP_JAR is $APP_JAR"
+#echo "APP_JAR is $APP_JAR"
 app=`find . -wholename ${APP_JAR:-"./build/libs/*.jar"}` # Use APP_JAR if set or default to ./build/libs/*.jar
 num_files=`echo "$app" | wc -w`
 
