@@ -7,7 +7,7 @@ set -e
 #APP_JAR=$1
 
 
-echo ${{ github.action_path }}
+#echo ${{ github.action_path }}
 
 PARAMS="-X POST -f -s -S -o - -u ${XP_USERNAME}:${XP_PASSWORD}" # Initializing arguments for curl command. 
 
