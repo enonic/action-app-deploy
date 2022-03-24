@@ -31,5 +31,5 @@ runs:
         CLIENT_KEY: ${{ inputs.client_key }}
         CLIENT_CERT: ${{ inputs.client_cert }}
         APP_JAR: ${{ inputs.app_jar }}
-      run: deploy.sh
+      run: ./deploy.sh
       shell: bash
