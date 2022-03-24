@@ -2,9 +2,9 @@
 
 set -e
 
-#XP_USERNAME=me
-#XP_PASSWORD=you
-#APP_JAR=$1
+XP_USERNAME=me
+XP_PASSWORD=you
+APP_JAR=$1
 
 
 #echo ${{ github.action_path }}
@@ -36,8 +36,15 @@ then
     echo "Set 'app_jar' parameter so 1 and only 1 jar is selected!"
     exit 1
 else
-    # We have a single jar, set it up for curl
-    PARAMS="${PARAMS} -F file=@${app}"
+    if [[ $file =~ \.jar$ ]];
+    then
+        # We have a single jar, set it up for curl
+        PARAMS="${PARAMS} -F file=@${app}"
+    else
+        echo "The given input is not a .jar file"
+        exit 1
+    fi
+        
 fi
 
 echo " I am going to run curl ${PARAMS} ${XP_URL}/app/install"
