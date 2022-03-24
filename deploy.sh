@@ -16,9 +16,10 @@ fi
 
 if [ -z "$APP_JAR" ]; then
 	echo "No app name specified, looking for .jar file under build/libs"
+	ls -lah ./
 	echo $(pwd)
 	#echo "${{ github.action_path }}"
-	ls -lah ${{ github.action_path }}
+	#ls -lah ${{ github.action_path }}
 	app=$(find ./build/libs  -type f -name "*.jar")
 	if [ -z "$app" ];
 	then
