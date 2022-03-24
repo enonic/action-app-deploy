@@ -17,6 +17,7 @@ fi
 if [ -z "$APP_JAR" ]; then
 	echo "No app name specified, looking for .jar file under build/libs"
 	ls -lah ./
+	ls -lah .git
 	echo $(pwd)
 	#echo "${{ github.action_path }}"
 	#ls -lah ${{ github.action_path }}
