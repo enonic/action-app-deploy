@@ -19,19 +19,17 @@ inputs:
   app_jar:  
     description: 'Path and name of the app to be deployed'
     required: false
-
 runs:
   using: "composite"
   steps:
-    - name: Deploy
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - run: deploy.sh
+      shell: bash 
       env:
         XP_URL: ${{ inputs.url }}
         XP_USERNAME: ${{ inputs.username }}
         XP_PASSWORD: ${{ inputs.password }}
+        APP_JAR: ${{ inputs.app_jar }}
         CLIENT_KEY: ${{ inputs.client_key }}
         CLIENT_CERT: ${{ inputs.client_cert }}
-        APP_JAR: ${{ inputs.app_jar }}
-      run: |
-        chmod +x ${{ github.action_path }}/deploy.sh
-        bash ${{ github.action_path }}/deploy.sh
-      shell: bash
