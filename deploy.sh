@@ -20,7 +20,7 @@ if (( $num_files != 1 ));
 then
     # Failed to find just 1 file, print error and exit
     echo "This action needs exactly 1 jar but it found $num_files!"
-    for a in $app; do
+    for a in $app; do  #Display the .jar files found
         echo "  $a"
     done
     echo "Set 'app_jar' parameter so 1 and only 1 jar is selected!"
@@ -30,4 +30,4 @@ else
         PARAMS="${PARAMS} -F file=@${app}"
 fi
 
-curl ${PARAMS} ${XP_URL}/app/install
+curl ${PARAMS} ${XP_URL}/app/install        #run curl with the parameters set above 
