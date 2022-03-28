@@ -34,7 +34,7 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       - id: deploy_app_to_XP
-        uses: enonic-cloud/app-deploy-action@<tag>
+        uses: enonic/app-deploy-action@<tag>
         with:
           url: 'https://<org-proj>.enonic.cloud:4443'
           username: 'deploy-user'
