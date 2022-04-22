@@ -1,4 +1,4 @@
-# app-deploy-action
+# action-app-deploy
 Composite action to deploy applications to an XP instance.
 
 # What's new
