@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to deploy app
     steps: 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: deploy_app_to_XP
         uses: enonic/action-app-deploy@<tag>
         with:
