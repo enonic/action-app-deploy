@@ -1,22 +1,25 @@
 name: 'App deploy action script to ENONIC XP'
 description: 'Github action script to be used for app deployment'
 inputs:
-  url: 
+  url:
     description: 'URL to XP instance'
     required: true
-  username:  
+  username:
     description: 'user name'
-    required: true
-  password: 
+    required: false
+  password:
     description: 'password of deploy user'
-    required: true
-  client_key:  
+    required: false
+  client_key:
     description: 'Client key, required only for MTLS session'
     required: false
-  client_cert: 
+  client_cert:
     description: 'Client cert, required only for MTLS session'
     required: false
-  app_jar:  
+  cred_file:
+    description: 'A service account key represented as a JSON string, containing the properties "algorithm", "kid", "principalKey", and "privateKey", used to generate a JWT token for authentication'
+    required: false
+  app_jar:
     description: 'Path and name of the app to be deployed'
     required: false
 runs:
@@ -24,12 +27,8 @@ runs:
   steps:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
-    - run: deploy.sh
-      shell: bash 
-      env:
-        XP_URL: ${{ inputs.url }}
-        XP_USERNAME: ${{ inputs.username }}
-        XP_PASSWORD: ${{ inputs.password }}
-        APP_JAR: ${{ inputs.app_jar }}
-        CLIENT_KEY: ${{ inputs.client_key }}
-        CLIENT_CERT: ${{ inputs.client_cert }}
+
+    - name: 'Deploy apps'
+      uses: docker://enonic/enonic-ci:7.15
+      with:
+        run: enonic --version
