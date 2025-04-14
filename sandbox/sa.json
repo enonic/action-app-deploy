@@ -1,0 +1,7 @@
+{
+  "algorithm": "RSA",
+  "kid": "<public-key-id>",
+  "label": "<label>",
+  "principalKey": "user:system:<user>",
+  "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEv....ygtC1g==\n-----END PRIVATE KEY-----\n"
+}
