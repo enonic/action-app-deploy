@@ -55,7 +55,7 @@ runs:
           echo "ENONIC_CLI_CLIENT_CERT=${CERT}" >> $GITHUB_ENV
         fi
 
-          ENTRYPOINT_FILE=$(mktemp ./entrypoint-XXXXXX.json)
+          ENTRYPOINT_FILE=$(mktemp ./entrypoint-XXXXXX.sh)
         
           echo "#!/bin/bash" > $ENTRYPOINT_FILE
           echo "set -e" >> $ENTRYPOINT_FILE
