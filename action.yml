@@ -59,15 +59,18 @@ runs:
     - name: "Write out entrypoint file"
       run: |
           set -e
-          echo "#!/bin/bash" > ${{ runner.temp }}/entrypoint.sh
-          echo "set -e" >> ${{ runner.temp }}/entrypoint.sh
-          echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> ${{ runner.temp }}/entrypoint.sh
-          chmod +x ${{ runner.temp }}/entrypoint.sh
+          ENTRYPOINT_FILE=$(mktemp ./entrypoint-XXXXXX.json)
+        
+          echo "#!/bin/bash" > $ENTRYPOINT_FILE
+          echo "set -e" >> $ENTRYPOINT_FILE
+          echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> $ENTRYPOINT_FILE
+          chmod +x $ENTRYPOINT_FILE
+          echo "ENTRYPOINT_FILE=${ENTRYPOINT_FILE}" >> $GITHUB_ENV
       shell: bash
 
     - uses: docker://enonic/enonic-ci:7.15
       with:
-        entrypoint: ${{ runner.temp }}/entrypoint.sh
+        entrypoint: ${{ env.ENTRYPOINT_FILE }}
       env:
         ENONIC_CLI_REMOTE_URL: ${{ inputs.url }}
         ENONIC_CLI_HTTP_PROXY: ${{ inputs.http_proxy_url }}
