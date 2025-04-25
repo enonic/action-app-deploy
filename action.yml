@@ -56,6 +56,14 @@ runs:
         fi
       shell: bash
 
+    - name: "Write out entrypoint file"
+      run: |
+          set -e
+          echo "#!/bin/bash" > ./entrypoint.sh
+          echo "set -e" >> ./entrypoint.sh
+          echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> ./entrypoint.sh
+          chmod +x ./entrypoint.sh
+
     - uses: docker://enonic/enonic-ci:7.15
       with:
         entrypoint: ./entrypoint.sh
