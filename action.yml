@@ -1,67 +1,35 @@
 name: 'App deploy action script to ENONIC XP'
 description: 'Github action script to be used for app deployment'
 inputs:
-  url:
+  url: 
     description: 'URL to XP instance'
     required: true
-  http_proxy_url:
-    description: 'URL of proxy server to use'
-    required: false
-  username:
+  username:  
     description: 'user name'
-    required: false
-  password:
+    required: true
+  password: 
     description: 'password of deploy user'
-    required: false
-  client_key:
+    required: true
+  client_key:  
     description: 'Client key, required only for MTLS session'
     required: false
-  client_cert:
+  client_cert: 
     description: 'Client cert, required only for MTLS session'
     required: false
-  cred_file:
-    description: 'Enonic XP Service Account Key'
-    required: false
-  app_jar:
+  app_jar:  
     description: 'Path and name of the app to be deployed'
     required: false
 runs:
   using: "composite"
   steps:
-    - name: "Copy credentials files"
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - run: deploy.sh
+      shell: bash 
       env:
-        CRED_FILE: ${{ inputs.cred_file }}
+        XP_URL: ${{ inputs.url }}
+        XP_USERNAME: ${{ inputs.username }}
+        XP_PASSWORD: ${{ inputs.password }}
+        APP_JAR: ${{ inputs.app_jar }}
         CLIENT_KEY: ${{ inputs.client_key }}
         CLIENT_CERT: ${{ inputs.client_cert }}
-      run: |
-        set -e
-        
-        if [ -n "$CRED_FILE" ]; then
-          echo "Using Service Account to authenticate with the server"
-          SERVICE_ACCOUNT_KEY_FILE=$(mktemp /tmp/service-account-XXXXXX.json)
-          echo -n "$CRED_FILE" > "${SERVICE_ACCOUNT_KEY_FILE}"
-        
-          echo "ENONIC_CLI_CRED_FILE=${SERVICE_ACCOUNT_KEY_FILE}" >> $GITHUB_ENV
-        fi
-        
-        if [ -n "$CLIENT_KEY" ] && [ -n "$CLIENT_CERT" ]; then
-          echo "Using mTLS to establish secure connection with the server"
-          KEY=$(mktemp /tmp/key.XXXXXX)
-          CERT=$(mktemp /tmp/crt.XXXXXX)        
-          echo -n "${CLIENT_KEY}" > "${KEY}"
-          echo -n "${CLIENT_CERT}" > "${CERT}"
-        
-          echo "ENONIC_CLI_CLIENT_KEY=${KEY}" >> $GITHUB_ENV
-          echo "ENONIC_CLI_CLIENT_CERT=${CERT}" >> $GITHUB_ENV
-        fi
-      shell: bash
-
-    - uses: docker://enonic/enonic-ci:7.15
-      with:
-        entrypoint: ./deploy.sh
-      env:
-        ENONIC_CLI_REMOTE_URL: ${{ inputs.url }}
-        ENONIC_CLI_HTTP_PROXY: ${{ inputs.http_proxy_url }}
-        ENONIC_CLI_REMOTE_USER: ${{ inputs.username }}
-        ENONIC_CLI_REMOTE_PASS: ${{ inputs.password }}
-        APP_JAR: ${{ inputs.app_jar }}
