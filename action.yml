@@ -63,6 +63,7 @@ runs:
           echo "set -e" >> ./entrypoint.sh
           echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> ./entrypoint.sh
           chmod +x ./entrypoint.sh
+      shell: bash
 
     - uses: docker://enonic/enonic-ci:7.15
       with:
