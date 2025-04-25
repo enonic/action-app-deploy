@@ -28,7 +28,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Copy credentials files"
+    - name: "Prepare environment"
       env:
         CRED_FILE: ${{ inputs.cred_file }}
         CLIENT_KEY: ${{ inputs.client_key }}
@@ -38,7 +38,7 @@ runs:
         
         if [ -n "$CRED_FILE" ]; then
           echo "Using Service Account to authenticate with the server"
-          SERVICE_ACCOUNT_KEY_FILE=${{ runner.temp }}/service-account.json
+          SERVICE_ACCOUNT_KEY_FILE=$(mktemp ./service-account-XXXXXX.json)
           echo -n "$CRED_FILE" > "${SERVICE_ACCOUNT_KEY_FILE}"
         
           echo "ENONIC_CLI_CRED_FILE=${SERVICE_ACCOUNT_KEY_FILE}" >> $GITHUB_ENV
@@ -46,19 +46,15 @@ runs:
         
         if [ -n "$CLIENT_KEY" ] && [ -n "$CLIENT_CERT" ]; then
           echo "Using mTLS to establish secure connection with the server"
-          KEY=${{ runner.temp }}/mtls.key
-          CERT=${{ runner.temp }}/mtls.crt        
+          KEY=$(mktemp ./mtls-XXXXXX.key)
+          CERT=$(mktemp ./mtls-XXXXXX.crt)        
           echo -n "${CLIENT_KEY}" > "${KEY}"
           echo -n "${CLIENT_CERT}" > "${CERT}"
         
           echo "ENONIC_CLI_CLIENT_KEY=${KEY}" >> $GITHUB_ENV
           echo "ENONIC_CLI_CLIENT_CERT=${CERT}" >> $GITHUB_ENV
         fi
-      shell: bash
 
-    - name: "Write out entrypoint file"
-      run: |
-          set -e
           ENTRYPOINT_FILE=$(mktemp ./entrypoint-XXXXXX.json)
         
           echo "#!/bin/bash" > $ENTRYPOINT_FILE
