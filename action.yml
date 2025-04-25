@@ -58,7 +58,7 @@ runs:
 
     - uses: docker://enonic/enonic-ci:7.15
       with:
-        entrypoint: ${{ github.action_path }}/entrypoint.sh
+        entrypoint: ./entrypoint.sh
       env:
         ENONIC_CLI_REMOTE_URL: ${{ inputs.url }}
         ENONIC_CLI_HTTP_PROXY: ${{ inputs.http_proxy_url }}
