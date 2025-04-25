@@ -38,7 +38,7 @@ runs:
         
         if [ -n "$CRED_FILE" ]; then
           echo "Using Service Account to authenticate with the server"
-          SERVICE_ACCOUNT_KEY_FILE=$(mktemp /tmp/service-account-XXXXXX.json)
+          SERVICE_ACCOUNT_KEY_FILE=${{ runner.temp }}/service-account.json
           echo -n "$CRED_FILE" > "${SERVICE_ACCOUNT_KEY_FILE}"
         
           echo "ENONIC_CLI_CRED_FILE=${SERVICE_ACCOUNT_KEY_FILE}" >> $GITHUB_ENV
@@ -46,8 +46,8 @@ runs:
         
         if [ -n "$CLIENT_KEY" ] && [ -n "$CLIENT_CERT" ]; then
           echo "Using mTLS to establish secure connection with the server"
-          KEY=$(mktemp /tmp/key.XXXXXX)
-          CERT=$(mktemp /tmp/crt.XXXXXX)        
+          KEY=${{ runner.temp }}/mtls.key
+          CERT=${{ runner.temp }}/mtls.crt        
           echo -n "${CLIENT_KEY}" > "${KEY}"
           echo -n "${CLIENT_CERT}" > "${CERT}"
         
@@ -59,15 +59,15 @@ runs:
     - name: "Write out entrypoint file"
       run: |
           set -e
-          echo "#!/bin/bash" > ./entrypoint.sh
-          echo "set -e" >> ./entrypoint.sh
-          echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> ./entrypoint.sh
-          chmod +x ./entrypoint.sh
+          echo "#!/bin/bash" > ${{ runner.temp }}/entrypoint.sh
+          echo "set -e" >> ${{ runner.temp }}/entrypoint.sh
+          echo "enonic app install --file ${APP_JAR:-./build/libs/*.jar}" >> ${{ runner.temp }}/entrypoint.sh
+          chmod +x ${{ runner.temp }}/entrypoint.sh
       shell: bash
 
     - uses: docker://enonic/enonic-ci:7.15
       with:
-        entrypoint: ./entrypoint.sh
+        entrypoint: ${{ runner.temp }}/entrypoint.sh
       env:
         ENONIC_CLI_REMOTE_URL: ${{ inputs.url }}
         ENONIC_CLI_HTTP_PROXY: ${{ inputs.http_proxy_url }}
